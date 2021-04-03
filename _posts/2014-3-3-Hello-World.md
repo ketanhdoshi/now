@@ -26,11 +26,9 @@ This is a paragraph, it's surrounded by whitespace. Next up are some headers, th
 2. ordered
 3. list
 
-Inline markup styles:
+Inline markup styles this _word_ is bold, and this **word** is italic.
 
-- _italics_
-- **bold**
-- `code()`
+Here is some `code variables`
 
 > Blockquote
 >> Nested Blockquot
