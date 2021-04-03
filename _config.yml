@@ -87,5 +87,3 @@ exclude:
 
 # Enable Latex math formulae
 use_math: true
-
-theme: jekyll-theme-merlot
