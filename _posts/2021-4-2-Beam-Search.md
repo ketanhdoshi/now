@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Foundations of NLP Explained Visually: Beam Search, How it Works
+title: Foundations of NLP Explained Visually Beam Search, How it Works
 ---
 
 Let's see if this changes the sentence show (shown below).
