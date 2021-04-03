@@ -17,14 +17,47 @@ This is a paragraph, it's surrounded by whitespace. Next up are some headers, th
 
 #### Header 4
 
+* [Node.js](https://nodejs.org)
+* [markdown-it](https://www.npmjs.com/package/markdown-it)
+* [tasks.json](/docs/editor/tasks)
+
+> This block quote is here for your information
+
 * A bulletted list
 - alternative syntax 1
 + alternative syntax 2
   - an indented list item
 
-1. An
-2. ordered
-3. list
+- [ ] Todo 1
+- [ ] Todo 2
+- [x] Todo 3
+- [ ] Todo 4
+
+
+`Horizontal Line`
+
+----
+
+1. Order 1
+2. Order 2
+   1. Sub item
+3. Order 3
+   1. Sub item 2
+   2. Sub item 4
+4. Order 4
+
+****
+
+`End Horizontal Line`
+
+Maths formulae
+$$
+f(x) = \int_{-\infty}^{\infty}
+      \hat f(\xi)\,e^{2 \pi i \xi x}
+      \,d\xi
+$$
+
+Let's add a [link](http://www.google.com) 
 
 Inline markup styles this _word_ is bold, and this **word** is italic.
 
@@ -33,7 +66,7 @@ Here is some `code variables`
 > Blockquote
 >> Nested Blockquot
 
-Syntax highlighting can be used with triple backticks, like so:
+Syntax highlighting can be used with **triple** backticks, like so:
 
 ```javascript
 /* Some pointless Javascript */
@@ -43,8 +76,3 @@ var rawr = ["r", "a", "w", "r"];
 Use two trailing spaces  
 on the right  
 to create linebreak tags  
-
-Finally, horizontal lines
-
-----
-****
