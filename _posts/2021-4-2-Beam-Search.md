@@ -21,3 +21,6 @@ This is a very commonly used technique in neural network applications. This is a
 - This is first handled by the Encoder which then takes it over for a long time and then keeps on typing for a while. After that it is changed and passed to the next stage
 - And here is the next line in the text
 - And now we keep on going till we get even more
+
+![More Predictions]({{site.baseurl}}/_posts/Pred-2.png)
+
