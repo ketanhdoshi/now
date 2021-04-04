@@ -22,5 +22,23 @@ This is a very commonly used technique in neural network applications. This is a
 - And here is the next line in the text
 - And now we keep on going till we get even more
 
-![More Predictions]({{site.baseurl}}/_posts/Pred-2.png)
+![More Predictions]({{site.baseurl}}/images/Pred-2.png)
+
+[Another Article](https://towardsdatascience.com/converting-medium-posts-to-markdown-for-your-blog-5d6830408467)
+
+1. Point one
+2. Point two
+
+```ts
+let foo = 'bar'
+
+/**
+Don't worry about the code block, it will be saved as a gist with right language format, and auto embed to your post.
+**/
+```
+
+### Conclusion
+
+And finally some more notes
+
 
