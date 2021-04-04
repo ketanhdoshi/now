@@ -12,7 +12,7 @@ The easiest way to make your first post is to edit this one.
 
 ## How do the product output
 
-![Predictions]({{site.baseurl}}/images/Pred-1.png)
+![Predictions](https://github.com/ketanhdoshi/now/raw/master/images/Pred-1.png)
 
 ## Next section
 
