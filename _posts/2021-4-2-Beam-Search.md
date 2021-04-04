@@ -22,7 +22,7 @@ This is a very commonly used technique in neural network applications. This is a
 - And here is the next line in the text
 - And now we keep on going till we get even more
 
-![More Predictions]({{site.baseurl}}/images/Pred-2.png)
+![More Predictions](https://github.com/ketanhdoshi/now/raw/master/images/Pred-2.png)
 
 [Another Article](https://towardsdatascience.com/converting-medium-posts-to-markdown-for-your-blog-5d6830408467)
 
