@@ -24,7 +24,11 @@ This is a very commonly used technique in neural network applications. This is a
 
 ![More Predictions](https://github.com/ketanhdoshi/now/raw/master/images/Pred-2.png)
 
+## Embed
+
 [Another Article](https://towardsdatascience.com/converting-medium-posts-to-markdown-for-your-blog-5d6830408467)
+
+<embed src="https://towardsdatascience.com/converting-medium-posts-to-markdown-for-your-blog-5d6830408467"/>
 
 1. Point one
 2. Point two
