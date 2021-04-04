@@ -4,7 +4,7 @@ title: 'Foundations of NLP Explained Visually Beam Search, How it Works'
 published: true
 ---
 
-HOw long does it take for  the sentence to show up (shown below).
+And some other stuff here to make sure it gets latest updates the sentence to show up (shown below).
 
 ![Seq to Seq](https://github.com/ketanhdoshi/now/raw/master/images/Seq-Seq.png)
 
