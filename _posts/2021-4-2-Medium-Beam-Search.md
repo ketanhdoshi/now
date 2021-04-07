@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Foundations of NLP Explained Visually: Beam Search, How It Works
+title: Foundations of NLP Explained Visually - Beam Search, How It Works
 ---
 
 A gentle guide to how Beam Search enhances predictions, in plain English
