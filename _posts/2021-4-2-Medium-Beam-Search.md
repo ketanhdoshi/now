@@ -47,13 +47,13 @@ This representation is then fed to a Decoder along with a “<START>” token to
 
 This is then passed through an output layer, which might consist of some Linear layers followed by a Softmax. The Linear layers output a score of the likelihood of occurrence of each word in the vocabulary, at each position in the output sequence. The Softmax then converts those scores into probabilities.
 
-![Probabilities for each character in the vocabulary, for each position in the output sequence (Image by Author)](https://miro.medium.com/max/680/1\*nId-RZloZiVUdFQFK31xcg.png)
+![Probabilities for each character in the vocabulary, for each position in the output sequence (Image by Author)](https://miro.medium.com/max/680/1*nId-RZloZiVUdFQFK31xcg.png)
 
 Probabilities for each character in the vocabulary, for each position in the output sequence (Image by Author)
 
 Our eventual goal, of course, is not these probabilities but a final target sentence. To get that, the model has to decide which word it should predict for each position in that target sequence.
 
-![The model predicts an output sentence based on the probabilities (Image by Author)](https://miro.medium.com/max/680/1\*MZGM7BnSm-L2n025P\_\_HIg.png)
+![The model predicts an output sentence based on the probabilities (Image by Author)](https://miro.medium.com/max/680/1*MZGM7BnSm-L2n025P__HIg.png)
 
 The model predicts an output sentence based on the probabilities (Image by Author)
 
@@ -63,7 +63,7 @@ How does it do that?
 
 A fairly obvious way is to simply take the word that has the highest probability at each position and predict that. It is quick to compute and easy to understand, and often does produce the correct result.
 
-![Greedy Search (Image by Author)](https://miro.medium.com/max/600/1\*IWNtDrXdepfzJUIshnQOAg.png)
+![Greedy Search (Image by Author)](https://miro.medium.com/max/600/1*IWNtDrXdepfzJUIshnQOAg.png)
 
 Greedy Search (Image by Author)
 
@@ -86,7 +86,7 @@ Intuitively it makes sense that this gives us better results over Greedy Search.
 
 Let’s take a simple example with a Beam width of 2, and using characters to keep it simple.
 
-![Beam Search example, with width = 2 (Image by Author)](https://miro.medium.com/max/1540/1\*tEjhWqUgjX37VnT7gJN-4g.png)
+![Beam Search example, with width = 2 (Image by Author)](https://miro.medium.com/max/1540/1*tEjhWqUgjX37VnT7gJN-4g.png)
 
 Beam Search example, with width = 2 (Image by Author)
 
@@ -116,7 +116,7 @@ We now understand Beam Search at a conceptual level. Let’s go one level deeper
 
 Continuing with our sequence-to-sequence model, the Encoder and Decoder would likely be a recurrent network consisting of some LSTM layers. Alternately it could also be built using Transformers rather than a recurrent network.
 
-![An LSTM-based Sequence-to-Sequence model (Image by Author)](https://miro.medium.com/max/1500/1\*dLHChU897ypcetDRRqnMIw.png)
+![An LSTM-based Sequence-to-Sequence model (Image by Author)](https://miro.medium.com/max/1500/1*dLHChU897ypcetDRRqnMIw.png)
 
 An LSTM-based Sequence-to-Sequence model (Image by Author)
 
@@ -126,7 +126,7 @@ Let’s focus on the Decoder component and the output layers.
 
 In the first timestep, it uses the Encoder’s output and an input of a “<START>” token to generate the character probabilities for the first position.
 
-![Character probabilities for the first position (Image by Author)](https://miro.medium.com/max/830/1\*unlaSs5XI\_68iq3chlqfVQ.png)
+![Character probabilities for the first position (Image by Author)](https://miro.medium.com/max/830/1*unlaSs5XI_68iq3chlqfVQ.png)
 
 Character probabilities for the first position (Image by Author)
 
@@ -136,19 +136,19 @@ Now it picks two characters with the highest probability eg. “A” and “C”
 
 For the second timestep, it then runs the Decoder twice using the Encoder’s output as before. Along with the “<START>” token in the first position, it forces the input of the second position to be “A” in the first Decoder run. In the second Decoder run, it forces the input of the second position to be “C”.
 
-![Character probabilities for the second position (Image by Author)](https://miro.medium.com/max/1440/1\*rh5LUbc1xh8sWeMMBN0jjA.png)
+![Character probabilities for the second position (Image by Author)](https://miro.medium.com/max/1440/1*rh5LUbc1xh8sWeMMBN0jjA.png)
 
 Character probabilities for the second position (Image by Author)
 
 It generates character probabilities for the second position. But these are individual character probabilities. It needs to compute the combined probabilities for character pairs in the first two positions. The probability of the pair “AB” is the probability of “A” occurring in the first position multiplied by the probability of “B” occurring in the second position, given that “A” is already fixed in the first position. The example below shows the calculation.
 
-![Calculate probabilities for character-pairs in the first two positions (Image by Author)](https://miro.medium.com/max/1018/1\*Zz8a8X4MZsjWJEA\_9Io7fg.png)
+![Calculate probabilities for character-pairs in the first two positions (Image by Author)](https://miro.medium.com/max/1018/1*Zz8a8X4MZsjWJEA_9Io7fg.png)
 
 Calculate probabilities for character-pairs in the first two positions (Image by Author)
 
 It does this for both Decoder runs and picks the character pairs with the highest combined probabilities across both runs. It, therefore, picks “AB” and “AE”.
 
-![The model picks the two best character pairs based on the combined probability (Image by Author)](https://miro.medium.com/max/1440/1\*4rlMOAAHW9Q9KaT2i4bUyw.png)
+![The model picks the two best character pairs based on the combined probability (Image by Author)](https://miro.medium.com/max/1440/1*4rlMOAAHW9Q9KaT2i4bUyw.png)
 
 The model picks the two best character pairs based on the combined probability (Image by Author)
 
@@ -156,19 +156,19 @@ The model picks the two best character pairs based on the combined probability (
 
 For the third time step, it again runs the Decoder twice as before. Along with the “<START>” token in the first position, it forces the input of the second position and third positions to be “A” and “B” respectively in the first Decoder run. In the second Decoder run, it forces the input of the second position and third positions to be “A” and “E” respectively.
 
-![Character probabilities for the third position (Image by Author)](https://miro.medium.com/max/1680/1\*Nnka3yYpNo6m3JeermN-1g.png)
+![Character probabilities for the third position (Image by Author)](https://miro.medium.com/max/1680/1*Nnka3yYpNo6m3JeermN-1g.png)
 
 Character probabilities for the third position (Image by Author)
 
 It calculates the combined probability for character triples in the first three positions.
 
-![Calculate probabilities for character-triples in the first three positions (Image by Author)](https://miro.medium.com/max/800/1\*TJbVv78IecgcfBoCcDfQHw.png)
+![Calculate probabilities for character-triples in the first three positions (Image by Author)](https://miro.medium.com/max/800/1*TJbVv78IecgcfBoCcDfQHw.png)
 
 Calculate probabilities for character-triples in the first three positions (Image by Author)
 
 It picks the two best ones across both runs, and therefore picks “ABC” and “AED”.
 
-![The model picks the two best character triples based on the combined probability (Image by Author)](https://miro.medium.com/max/1680/1\*2edhf25eROJAj1RgTnlChQ.png)
+![The model picks the two best character triples based on the combined probability (Image by Author)](https://miro.medium.com/max/1680/1*2edhf25eROJAj1RgTnlChQ.png)
 
 The model picks the two best character triples based on the combined probability (Image by Author)
 
@@ -184,8 +184,8 @@ This gives us a sense of what Beam Search does, how it works, and why it gives u
 
 And finally, if you liked this article, you might also enjoy my other series on Audio Deep Learning and Reinforcement Learning.
 
-[Audio Deep Learning Made Simple (Part 1): State-of-the-Art Techniques](https://medium.com/audio-deep-learning-made-simple-part-1-state-of-the-art-techniques-da1d3dff2504)
+[Audio Deep Learning Made Simple (Part 1): State-of-the-Art Techniques](https://towardsdatascience.com/audio-deep-learning-made-simple-part-1-state-of-the-art-techniques-da1d3dff2504)
 
-[Reinforcement Learning Made Simple (Part 1): Intro to Basic Concepts and Terminology](https://medium.com/reinforcement-learning-made-simple-part-1-intro-to-basic-concepts-and-terminology-1d2a87aa060)
+[Reinforcement Learning Made Simple (Part 1): Intro to Basic Concepts and Terminology](https://towardsdatascience.com/reinforcement-learning-made-simple-part-1-intro-to-basic-concepts-and-terminology-1d2a87aa060)
 
 Let’s keep learning!
