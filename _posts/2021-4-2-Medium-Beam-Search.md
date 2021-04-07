@@ -6,7 +6,7 @@ title: Foundations of NLP Explained Visually - Beam Search, How It Works
 A gentle guide to how Beam Search enhances predictions, in plain English
 ----
 
-![](https://miro.medium.com/max/7308/0\*GqR\_ZQubZEsYBRIx)
+![](https://miro.medium.com/max/700/0*GqR_ZQubZEsYBRIx)
 
 Photo by [Casey Horner](https://unsplash.com/@mischievous_penguins) on [Unsplash](https://unsplash.com)
 
