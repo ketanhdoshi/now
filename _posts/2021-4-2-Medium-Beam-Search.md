@@ -33,7 +33,7 @@ NB: Depending on the problem they’re solving, NLP models can generate output a
 
 Let’s take a sequence-to-sequence model as an example. These models are frequently used for applications such as machine translation.
 
-![Sequence-to-Sequence Model for Machine Translation (Image by Author)](https://miro.medium.com/max/1440/1\*GkG\_5wg57IpkU8F84nJubQ.png)
+![Sequence-to-Sequence Model for Machine Translation (Image by Author)](https://miro.medium.com/max/1440/1*GkG_5wg57IpkU8F84nJubQ.png)
 
 Sequence-to-Sequence Model for Machine Translation (Image by Author)
 
