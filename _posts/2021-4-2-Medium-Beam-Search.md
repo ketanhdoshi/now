@@ -21,9 +21,9 @@ In this article, I will explore Beam Search and explain why it is used and how i
 
 Also, if you are interested in NLP, I have a few more articles that you might find useful. They explore other fascinating topics in this space such as Transformers and Speech-to-Text.
 
-1.  [Transformers Explained Visually: Overview of functionality](https://medium.com/transformers-explained-visually-part-1-overview-of-functionality-95a6dd460452) _(How Transformers are used, and why they are better than RNNs. Components of the architecture, and behavior during Training and Inference)_
-2.  [How Transformers work, step-by-step](https://medium.com/transformers-explained-visually-part-2-how-it-works-step-by-step-b49fa4a64f34) _(Internal operation end-to-end. How data flows and what computations are performed, including matrix representations)_
-3.  [Automatic Speech Recognition](https://medium.com/audio-deep-learning-made-simple-automatic-speech-recognition-asr-how-it-works-716cfce4c706) _(Speech-to-Text algorithm and architecture, using CTC Loss and Decoding for aligning sequences.)_
+1.  [Transformers Explained Visually: Overview of functionality](https://towardsdatascience.com/transformers-explained-visually-part-1-overview-of-functionality-95a6dd460452) _(How Transformers are used, and why they are better than RNNs. Components of the architecture, and behavior during Training and Inference)_
+2.  [How Transformers work, step-by-step](https://towardsdatascience.com/transformers-explained-visually-part-2-how-it-works-step-by-step-b49fa4a64f34) _(Internal operation end-to-end. How data flows and what computations are performed, including matrix representations)_
+3.  [Automatic Speech Recognition](https://towardsdatascience.com/audio-deep-learning-made-simple-automatic-speech-recognition-asr-how-it-works-716cfce4c706) _(Speech-to-Text algorithm and architecture, using CTC Loss and Decoding for aligning sequences.)_
 
 We’ll start by getting some context regarding how NLP models generate their output so that we can understand where Beam Search (and Greedy Search) fits in.
 
