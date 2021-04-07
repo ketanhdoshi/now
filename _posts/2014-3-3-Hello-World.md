@@ -73,6 +73,12 @@ Syntax highlighting can be used with **triple** backticks, like so:
 var rawr = ["r", "a", "w", "r"];
 ```
 
+![nice image](../images/step1.gif)
+
+KD here is my new [link][google]
+
+[google]: http://www.google.com
+
 Use two trailing spaces  
 on the right  
 to create linebreak tags  
