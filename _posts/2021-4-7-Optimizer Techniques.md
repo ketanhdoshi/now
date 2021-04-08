@@ -1,65 +1,193 @@
 ---
 layout: post
-title: Optimizer Techniques
+title: Neural Network Optimizers Made Simple - Essential Techniques
 ---
 
-A gentle guide to Optimizer Techniques, in plain English
+Gradient Descent, Momentum, Adam and more. 
+
+A gentle guide to the techniques used by gradient descent optimizers and why they are used, in plain English
 ----
 
-Overview of the most useful optimizers that you will commonly used - SGD, Momentum, RMSProp, Adam
+Optimizers are a critical component of a Neural Network architecture. During training, they play a key role in helping the network learn to make better and better predictions. 
 
-Additional articles - go into more depth on each one - Exponential Moving Avg + Momentum, Adam + AdamW etc
+They do this by finding the optimal set of model parameters like weights and biases so that the model can output the best set of outputs for the problem they're solving.
 
-For instance, both Pytorch and Keras have a plethora of built-in optimizers like Adagrad, Adam, etc. What are there so many different ones? How do we choose which one to use? If you read the docs for each one, they describe a formulae for the weight update. But what does each formula mean? Let's first try to get some overall context so we can then get some intuition about how each one fits in, before diving into the formulae.
+The most common optimization technique used by most neural networks is based on gradient descent.
+
+At a very high level, a neural network runs numerous iterations during training:
+- a forward pass to calculate their outputs based on the current parameters and the input data
+- a loss function to calculate a 'cost' for the gap between the current outputs and the desired target outputs
+- a backward pass to calculate the gradients of the loss relative to the parameters
+- an optimization step that uses the gradients to update the parameters in such a way as to reduce the loss for the next iteration
+
+There are many types of optimizer that perform the final step above, with a goal of progressively reducing the loss in each iteration, till they find the minimum loss for the network.
+
+For instance, both the most popular deep learning libraries, Pytorch and Keras have a plethora of built-in optimizers like SGD, Adadelta, Adagrad, RMSProp, Adam and so on.
+
+Why are there so many different optimization algorithms? And how do we decide which one to choose? 
+
+If you read the docs for each one, they describe a formula for the parameter update. But what does each formula mean and what is its significance?
+
+But before we are ready to dive into the mathematics, my goal with this article is to provide some overall context so that we can get some intuition about how each algorithm fits in. In fact, I will not discuss the formulae themselves here, but will leave that for another article.
 
 ## Overview of Optimization with Gradient Descent
-- Explain what is Loss Landscape
-- Start with a typical picture of 3D loss landscape with a convex curve, Weights w1/w2 on the horizontal plane and Loss on the vertical plane. Show a trajectory going down the curve.
-- Explain why this is an idealised scenario, not realistic. Say that this is a nice visualization to get the initial concept intuition when you are starting out, but this is not realistic for a few reasons.
-- One reason is that this is an ideal convex curve. In reality the curve is very bumpy
-- Second reason is that this trajectory shows you traversing the 3D curve. whereas actually the optimizer is only traversing the horizontal flat 2D plane of the parameters. You aren't actually going "down the slope". The Loss reduces in the next iteration, but the optimizer only operates on the weights.
-- Third reason is that there are not just 2 parameters. There are billions and it is impossible to visualize that or even imagine that in your head.
-- So instead draw a 2D curve with only 1 parameter. On that show what gradient means by showing delta y/delta x which corresponds to the slope. Then show that Optimizer only updates weights on the X axis. The Loss function on the Y axis changes indirectly as a consequence.
-- Then say that what I find more helpful to visualise is the curve for a single parameter independently. This means that keep all other params constant, and only change this one parameter and plot the Loss and gradients for that. Then imagine that there are a billion such separate curves.
+Let's start with a typical 3D picture of the gradient descent algorithm at work. How do you interpret such a figure?
+
+![gradient descent trajectory](https://upload.wikimedia.org/wikipedia/commons/5/5b/Gradient_descent_method.png)
+
+This picture shows a network with two weight parameters:
+- the horizontal plane has two axes, for weights w1 and w2 respectively.
+- the vertical axis shows the value of the loss, for each combination of the weights
+
+In other words, the shape of the curve shows the "Loss Landscape" for the neural network. It plots the loss for different values of the weights, for a given input dataset. In other words, we keep the input dataset fixed while we plot the curve.
+
+The blue line plots the trajectory of the gradient descent algorithm during optimization:
+- It starts off by choosing some random values for both weights, and computing the loss value.
+- At each iteration as it updates its weight values, resulting in a lower loss (hopefully), it moves to a lower point along the curve
+- Finally it arrives at its objective which is the bottom of the curve where the loss is lowest. 
+
+This is a useful visualization to understand the concept of gradient descent at first. However, we should realize that this is an idealised scenario, not a realistic one.
+
+Let's understand why that it is, so that we can grasp what the difficulties are in a typical real-world scenario:
+- Firstly this is a smooth convex-shaped curve. In reality, the curve is very bumpy
+    
+![Loss Landscape](https://github.com/ketanhdoshi/now/raw/master/images/optimizer/Landscape-1.png)
+
+- Secondly, we are not going to have just 2 parameters. There are often tens or hundreds of millions, and it is impossible to visualize or even imagine that in your head.
+  
+Instead, it might be easier to imagine each of those millions of parameters independently. We can picture a 2D curve with only 1 parameter. Think of this as keeping all other parameters constant and varying only this single parameter and plotting the loss and gradients for it. Then imagine that there are millions of such separate curves.
+
+![Gradient Descent](https://github.com/ketanhdoshi/now/raw/master/images/optimizer/Gradient%20Descent-1.png)
+
+The gradient is the change in the vertical direction (dL) divided by the change in the horizontal direction (dW). This means that the gradient is large for steep slopes and small for gentle slopes.
+
+$$
+w_{t+1} = w_t - \alpha  \frac{\partial L}{\partial w}
+$$
+
+![Gradient Descent](https://github.com/ketanhdoshi/now/raw/master/images/optimizer/Gradient%20Descent-2.png)
+
+Also, just to be clear, although the trajectory of the visualization shows you going 'down the slope' as you traverse the 3D curve, the optimizer itself operates only on the horizontal 2D parameter plane, and only indirectly moves the loss along the vertical dimension.
+
+The optimizer updates the parameter value from one point to another on the horizontal axis. In turn, in the next iteration, the corresponding loss gets reduced along the vertical axis.
+
+![Gradient](https://upload.wikimedia.org/wikipedia/commons/f/f7/Dydx_zh.jpg)
+
+Gradient descent works by "looking in all directions for the best slope that it can go down". So what happens when the best slope isn't the best direction to take? 
+
+What if the landscape slopes steeply in one direction but the lowest point is in the direction of the more gentle slope? Or what if the landscape all around is fairly flat? Or if it goes down a deep ditch how does it climb out of it? 
+
+These are some examples of curves that pose difficulties for it. Let's look at those next.
 
 ## Challenges with Optimization using Gradient Descent
-- You might have many minima. So you might get stuck in a local minima and not reach the global. Gradient Descent finds it very difficult to jump out of a local minima.
-- Basically you could have unusual shapes inside the curve that become hard to traverse.
-- You could have saddle points. KD - what exactly is the challenge with saddle points? Is it that the gradient is steep in one direction, but the actual direction you want to go is a gentle slope.
-- You could have pathological curvature where there is a narrow ravine. And what you want to do is not go down the side of the ravine to the bottom of the valley, but actually traverse along the valley. because there is a minima at the end of the valley eg. sort of like a river valley that ends in a lake or the sea.
-- So depending on your starting point within the Loss Landscape, which you select randomly, you might encounter landscape features which become hard to traverse.
+You might have many local minima in addition to the global minimum. Once Gradient Descent goes down a local minima, it finds it very difficult to jump out of it. So during optimization it might find one of the local minima and get stuck there without reaching the global minimum. 
 
-## First Improvement to Gradient Descent - Stochastic Gradient Descent
-Here rather than take the full dataset, we operate on a randomly selected mini batch at a time. That randomness helps us explore the loss landscape. Since there are different data samples in each mini batch, the Loss value will vary. And so also the gradients will vary. In effect you are actually varying the Loss Landscape with each mini batch. So even though in one mini batch you might end up in a topography where you could get stuck, the next mini batch you might end up in a different place so that lets you keep moving. So that helps you not to get stuck in a particular section of the landscape, especially in the early stages of training.
+![local minima](https://upload.wikimedia.org/wikipedia/commons/6/68/Extrema_example_original.svg)
+  
+Another key challenge is the occurrence of saddle points. Let's look at this saddle point from two directions, for each of the two parameters. In the direction corresponding to the first parameter, the curve is at a local minimum. On the other hand, in the direction corresponding to the second parameter, the curve is at a local maximum.
+  
+  ![saddle point](https://upload.wikimedia.org/wikipedia/commons/4/40/Saddle_point.png)
+
+What makes many saddle points tricky, is that the area immediately around the saddle point is fairly flat, like a plateau. This means that the gradients are close to zero. This causes the optimizer to bounce back and forth around the saddle point, in the direction of the first parameter, without being able to descend down the slope in the direction of the second parameter.
+
+The gradient descent thus assumes that it has found the minimum.
+
+Gradient Descent also finds it hard to traverse ravines. This is a long narrow valley which slopes steeply in one direction and gently in the second direction. Often this ravine leads down to the minimum. Think of this like a long narrow river valley that slopes down gently from the hills till it ends in a lake.
+
+![Pathological Curvature](https://github.com/ketanhdoshi/now/raw/master/images/optimizer/Gradient%20Descent-3.png)
+
+What you want to do is move quickly downriver in the direction of the valley. However, it is very easy for gradient descent to bounce up and down along the sides of the valley and move very slowly in the direction of the river.
+
+Due to this difficulty, such a shape is also called Pathological Curvature.  
+
+So, what we've just seen is that, depending on your starting point within the Loss Landscape, which you select randomly, gradient descent might encounter landscape features which are very hard to traverse.
+
+We've just seen some of the challenges with gradient descent.
+
+Although they continue to use gradient descent at the core, optimization algorithms have developed a series of improvements on the vanilla gradient descent.
+
+Let's look at each of these techniques in turn.
+
+## First Improvement to Gradient Descent - Mini-batch Stochastic Gradient Descent (SGD)
+Gradient Descent usually means "full-batch gradient descent", where the loss and gradient is calculated using all the items in the data set.
+
+Rather than take the full dataset, Stochastic Gradient Descent takes a randomly selected subset at a time, for each training iteration. This subset is usually known as a mini-batch.
+
+That randomness helps us explore the loss landscape. 
+
+As we mentioned earlier when visualizing the loss curve, it is obtained by varying the parameters while keeping the input dataset fixed. However, if you vary the input by selecting different data samples in each mini-batch, the loss value will vary, and the gradients will vary also. In effect, by varying the input dataset, you are actually varying the loss curve (slightly) with each mini-batch. 
+
+So even though in one mini-batch you might end up in a topography where you could get stuck, you might end up in a slightly different place for the next mini-batch, and that lets you keep moving. This prevents the algorithm from getting stuck in a particular section of the landscape, especially in the early stages of training.
 
 ## Second Improvement to Gradient Descent - Momentum
 One of the tricky parts of Gradient Descent is dealing with steep slopes. It is very easy to take a large step when you actually want to go slowly and cautiously. Because the gradient is large there, you could make a large update and jump out of the valley altogether.
 
+![Momentum](https://github.com/ketanhdoshi/now/raw/master/images/optimizer/Momentum-1.png)
+
 Now ideally you want to be a bit intelligent about this based on where in the landscape you are. If the slope is very steep you want to slow down. If the slope is very flat you might want to speed up and so on. So you want to vary the magnitude of the update dynamically so you can respond to changes in the landscape around you.
 
-With Gradient Descent you make an update to the weights at each step, based on the gradient and the learning rate. In other words, to modify the size of the update, there are two things you can do:
+How can you modify the update dynamically?
+
+With Gradient Descent you make an update to the weights at each step, based on the gradient and the learning rate. Therefore, to modify the size of the update, there are two things you can do:
 - One is to adjust the gradient
 - Second is to adjust the learning rate
 
-Momentum is a way to do the first above ie. adjust the gradient. Right now we look only at the current gradient, and ignore all the past gradients. This means that if there is a sudden change in the landscape due to an anomaly in the curve, your trajectory may get thrown off course. That is sort of like saying there is a sudden ditch or cliff and you react to just that without using the knowledge of the surrounding landscape that you had seen up until that point.
+Momentum is a way to do the former above ie. adjust the gradient. How does it differ from SGD?
 
-So the idea is that you let the past gradients guide your overall direction so that you stay on course. The question becomes how far in the past do you go? and does every gradient from the past count equally? From intuition it would make sense that things from the recent past should count more than things from the distant past. So that if the change in landscape is not an anomaly, but a genuine structural change, then you do need to react to it bit by bit and change your course gradually.
+With SGD we look only at the current gradient, and ignore all the past gradients. This means that if there is a sudden change in the landscape due to an anomaly in the curve, your trajectory may get thrown off course. As an analogy, you encounter a sudden cliff and respond to it by considering just that piece of information without using the knowledge of the surrounding landscape that you had seen up until that point.
 
-This helps you tackle problems like the pathological curvature. Basically this means that one weight parameter the gradient is very high and for another it is very low. So with SGD, you might actually bounce around from one side of the valley to another. But with momentum, you can dampen the oscillations. Because the large gradients from one step for the first parameter cancels out the large gradient updates from the next step in the opposite direction. On the other hand, the small updates for the first step for the second parameter reinforces the small updates for the second step because they are in the same direction.
+When using Momentum on the other hand, the idea is that you let the past gradients guide your overall direction so that you stay on course. It does this by using the exponential moving average of the gradient. This helps dampen the effect of outliers in the loss curve.
 
-There are different techniques like Plain Momentum, Nestorov Gradient which do this using different formulae.
+1. The first question is how far in the past do you go? The further back you go, the less you will be affected by sudden anomalies in the landscape around you. Conversely you will be slower at responding to changes in the landscape.
+   
+2. Secondly, does every gradient from the past count equally? From intuition it would make sense that things from the recent past should count more than things from the distant past. So if the change in landscape is not an anomaly, but a genuine structural change, then you do need to react to it bit by bit and change your course gradually.
+
+This is a hyper-parameter that you can use to tune the Momentum algorithm. 
+
+Momentum helps you tackle the narrow ravine problem of pathological curvature, where the gradient is very high for one weight parameter but very low for another parameter. 
+
+![Momentum](https://github.com/ketanhdoshi/now/raw/master/images/optimizer/Momentum-2.png)
+
+By using momentum, you dampen the zig zag oscillations that would happen with SGD. 
+- For the first parameter with the steep slope, the large gradient causes a 'zig' from one side of the valley to the other. However in the next step, this gets cancelled out by the 'zag' in the reverse direction.
+  
+- On the other hand for the second parameter, the small updates from the first step are reinforced by the small updates for the second step because they are in the same direction. This is the direction along the valley in which you want to go.
+
+Some examples of Optimizer algorithms that use this approach using different formulae are:
+- SGD with Momentum
+- Nestorov Accelerated Gradient
 
 ## Third Improvement to Gradient Descent - Modify Learning Rate (based on the landscape)
-Here we modify the learning rate component using different formulae.
-For instance, if they square the gradients, then the cancelling out effect from opposite directions, that we talked about in Momentum, will get negated. So if we are in a steep slope, the gradients are large and the square of the gradients are large and always positive, so they accumulate fast. To dampen this, the formula makes a bigger adjustment to reduce the learning rate. For shallower slopes, the accumulation is small and so the formula makes a smaller adjustment to the learning rate.
+As we mentioned above, the second way to modify the size of the parameter update is by adjusting the learning rate.
 
-There are a few different optimizer techniques which do this. eg. Adagrad, Adadelta, RMS Prop.
+So far, the learning rate has stayed constant from one iteration to the next. Secondly, the gradient updates use the same learning rate for all parameters.
 
-And then there are some which build on top of the Momentum improvements, so they are a combination, modifying both the gradient as well as the learning rate. eg. Adam, and its many variants, LAMB.
+However, as we have seen there might be large variations between the gradients of different parameters. One parameter might have a steep slope while another has a gentle slope.
+
+We can make use of this to adapt the learning rate to each parameter. As with Momentum, we can make use of past gradients (for each parameter separately) to choose the learning rate for that parameter.
+
+There are a few Optimizer algorithms which do this, using slightly different techniques eg. Adagrad, Adadelta, RMS Prop.
+
+For instance, Adagrad squares the past gradients and adds them up, weighting all of them equally. RMSProp also squares the past gradients but uses their exponential moving average, thus giving more importance to recent gradients.
+
+Now, by squaring the gradients, they all become positive ie. have the same direction. This negates the cancelling out effect that we talked about for Momentum, with gradients in opposite directions.
+
+This means that for a parameter that has a step slope, the gradients are large and the square of the gradients are really large and always positive, so they accumulate fast. To dampen this, the algorithm divides the accumulated squared gradients by a larger factor, and uses that to adjust the learning rate.
+
+Similarly, for shallower slopes, the accumulation is small and so the algorithm divides the accumulated squares by a smaller factor to compute the learning rate.
+
+Some Optimizer algorithms do both - modify the learning rate as above as well as use Momentum to modify the gradient. eg. Adam and its many variants, LAMB.
 
 ## Fourth Improvement to Gradient Descent - Modify Learning Rate (based on your training progress)
-This topic is actually not under Optimizers at all. This is handled by Schedulers. They vary the learning rate and other optimization hyperparameters based on a formula that depends on the epoch of the training.
+In the previous section, the learning rate was modified based on the gradients of the parameters. In addition we can adjust the learning rate based on the progression of the training process. The learning rate is set purely on the training epoch and is independent of the model's parameters at that point.
+
+This is actually not handled by Optimizers at all. It is, in fact, a separate component of the neural network known as a Scheduler. I am mentioning this for completeness and to show the relationship with the Optimization techniques we've discussed, but will not cover them further here.
 
 ## Conclusion
 
+We now understand the basic techniques used by Optimizers based on Gradient Descent, why they are used and how they relate to one another.
+
+This puts us in a good position to go deeper into many of the specific optimization algorithms and understand how they work in detail. I hope to cover that in another article soon...
+
+Let's keep learning!
 

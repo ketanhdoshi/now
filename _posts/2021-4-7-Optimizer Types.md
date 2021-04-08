@@ -5,6 +5,9 @@ title: Popular Optimizer Types
 
 A gentle guide to Popular Optimizer Types, in plain English
 ----
+Overview of the most useful optimizers that you will commonly used - SGD, Momentum, RMSProp, Adam
+
+Exponential Moving Avg + Momentum, Adam + AdamW etc
 
 ## Details of Optimizers - Momentum with Exponential Moving Avg, RMSProp and Adam
 Include some of my Pytorch code from optimiser_lib to show the Python Step code for calculating each optimiser.
